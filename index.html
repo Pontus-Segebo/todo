@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Todo App</title>
+  <style>
+    li input[type="checkbox"]:checked + span {
+      text-decoration: line-through;
+      color: gray;
+    }
+    span.todo-text {
+      outline: none;
+      cursor: text;
+      padding: 2px 5px;
+      display: inline-block;
+      min-width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo List</h1>
+  <form>
+    <input id="todo-input" placeholder="Enter todo" />
+    <button type="submit">Add</button>
+  </form>
+  <ul id="todo-list"></ul>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
