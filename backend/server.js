@@ -5,10 +5,10 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// create app
 const app = express();
 const PORT = 3000;
 
-// Resolve __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -22,7 +22,7 @@ if (!fs.existsSync(TODOS_DIR)) {
 app.use(cors());
 app.use(bodyParser.json());
 
-// GET all todos
+// GET for fetch
 app.get("/api/todos", (req, res) => {
   const files = fs.readdirSync(TODOS_DIR);
   const todos = files.map((file) => {
@@ -32,7 +32,7 @@ app.get("/api/todos", (req, res) => {
   res.json(todos);
 });
 
-// POST a new todo
+// POST for creation
 app.post("/api/todos", (req, res) => {
   const id = Date.now();
   const newTodo = { id, text: req.body.text, completed: false };
@@ -40,7 +40,7 @@ app.post("/api/todos", (req, res) => {
   res.status(201).json(newTodo);
 });
 
-// PATCH update todo (partial update: text and/or completed)
+// PATCH for update. Can use post for override
 app.patch("/api/todos/:id", (req, res) => {
   const id = req.params.id;
   const filePath = path.join(TODOS_DIR, `${id}.json`);
@@ -50,16 +50,17 @@ app.patch("/api/todos/:id", (req, res) => {
   }
 
   const existing = JSON.parse(fs.readFileSync(filePath));
+
   const updated = {
     ...existing,
-    ...req.body, // merge updates (text, completed, or both)
+    ...req.body,
   };
 
   fs.writeFileSync(filePath, JSON.stringify(updated, null, 2));
   res.json(updated);
 });
 
-// DELETE a todo
+// DELETE for deletion
 app.delete("/api/todos/:id", (req, res) => {
   const id = req.params.id;
   const filePath = path.join(TODOS_DIR, `${id}.json`);

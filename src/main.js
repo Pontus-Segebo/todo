@@ -20,32 +20,38 @@ async function fetchTodos() {
     list.appendChild(li);
   });
 
-  // Add event listeners for checkboxes (completed toggle)
+  // Add event listeners for checkboxes with loop
   document.querySelectorAll(".check").forEach((checkbox) => {
     checkbox.addEventListener("change", async (e) => {
       const id = e.target.dataset.id;
       const completed = e.target.checked;
+
       await fetch(`${apiUrl}/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ completed }),
       });
-      // Optionally re-fetch or update UI here
+
+      // re render
       fetchTodos();
     });
   });
 
-  // Add event listeners for inline text editing (on blur)
+  // Add event listeners
   document.querySelectorAll(".todo-text").forEach((span) => {
+
+    
     span.addEventListener("blur", async (e) => {
       const id = e.target.dataset.id;
       const text = e.target.innerText.trim();
-      if (text.length === 0) return; // skip empty updates
+      if (text.length === 0) return;
+
       await fetch(`${apiUrl}/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
       });
+
     });
   });
 }
